@@ -17,7 +17,7 @@ class Camera:
         self.fsy = self.dist_focal * (self.px_altura / self.ccd[1])
         self.fstheta = THETA
 
-    def generate_intrinsix_matrix(self):
+    def generate_intrinsic_matrix(self):
         self.K = np.array([[self.fsx,self.fstheta,self.ox],[0,self.fsy,self.oy],[0,0,1]])
         self.M_canon = BASE_CANON
 
@@ -31,10 +31,6 @@ class Camera:
         T[2,-1] = dz
         return T
 
-    def z_rotation(angle):
-        rotation_matrix=np.array([[cos(angle),-sin(angle),0,0],[sin(angle),cos(angle),0,0],[0,0,1,0],[0,0,0,1]])
-        return rotation_matrix
-
     def x_rotation(angle):
         rotation_matrix=np.array([[1,0,0,0],[0, cos(angle),-sin(angle),0],[0, sin(angle), cos(angle),0],[0,0,0,1]])
         return rotation_matrix
@@ -42,3 +38,10 @@ class Camera:
     def y_rotation(angle):
         rotation_matrix=np.array([[cos(angle),0, sin(angle),0],[0,1,0,0],[-sin(angle), 0, cos(angle),0],[0,0,0,1]])
         return rotation_matrix
+
+    def z_rotation(angle):
+        rotation_matrix=np.array([[cos(angle),-sin(angle),0,0],[sin(angle),cos(angle),0,0],[0,0,1,0],[0,0,0,1]])
+        return rotation_matrix
+    
+    def generate_extrinsic_matrix(self):
+        g = self.x_rotation@self.y_rotation@self.z_rotation@self.move
