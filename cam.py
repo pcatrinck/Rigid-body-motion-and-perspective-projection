@@ -24,9 +24,9 @@ class Camera:
         self.fsy = self.dist_focal * (self.px_altura / self.ccdy)
         self.fstheta = self.fstheta * self.dist_focal
 
-        self.K = np.array([[self.fsx,self.fstheta,self.ox],
-                           [0,self.fsy,self.oy],
-                           [0,0,1]])
+        self.K = np.array([[self.fsx , self.fstheta , self.ox],
+                           [   0     ,   self.fsy   , self.oy],
+                           [   0     ,    0         ,    1   ]])
     
         return self.K
     
@@ -92,7 +92,8 @@ class Camera:
         return self.M
     
     def generate_extrinsix_matrix(self):
-        self.g = np.linalg.inv(self.M)
+        #self.g = self.rotation_matrix@self.T  #tava antes
+        self.g = np.linalg.inv(self.M) #raquel
         return self.g
 
     def camera_matrix(self):

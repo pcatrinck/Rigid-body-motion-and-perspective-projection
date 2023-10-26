@@ -215,15 +215,15 @@ class MainWindow(QMainWindow):
         self.fig2 = plt.figure()
         self.ax2 = self.fig2.add_subplot(111, projection='3d')
 
-        plt.ion()
+        plt.ion() # Atualiza automaticamente o ambiente 3d
 
-        
         # Criar um objeto FigureCanvas para exibir o gráfico 3D
         self.stl_plot = self.obj.STL()
         self.stl_vectors = self.obj.STL_vetor() 
         self.ax2.add_collection3d(art3d.Poly3DCollection(self.stl_vectors))
         self.ax2.add_collection3d(art3d.Line3DCollection(self.stl_vectors, colors='k', linewidths=0.2, linestyles='-'))
         self.ax2.auto_scale_xyz(self.stl_plot[0,:],self.stl_plot[1,:],self.stl_plot[2,:])
+        #self.ax2.scatter(self.stl_plot[0,0], self.stl_plot[1,0], self.stl_plot[2,0],'b')
         self.set_axes_equal(self.ax2)
         self.ax2.view_init(elev=45,azim=-35)
         self.ax2.dist=10
@@ -338,7 +338,7 @@ class MainWindow(QMainWindow):
                            [0,0,1,0]])
        int_mat = self.cam.generate_intrinsix_matrix()
        ext_mat = self.cam.generate_extrinsix_matrix()
-       self.projection = int_mat@pi_zero@np.linalg.inv(ext_mat)@self.stl_plot
+       self.projection = int_mat@pi_zero@ext_mat@self.stl_plot
 
        self.projection[0,:] = self.projection[0,:] / self.projection[2,:]
        self.projection[1,:] = self.projection[1,:] / self.projection[2,:]
@@ -369,7 +369,8 @@ class MainWindow(QMainWindow):
         self.ax1.set_ylim([self.y_lim,0])
 
     def reset_canvas(self):
-        return
+        self.cam = Camera()
+        self.update_canvas(self.cam.px_base,self.cam.px_altura)
     
 if __name__ == '__main__':
     app = QApplication(sys.argv)

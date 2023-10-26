@@ -5,7 +5,7 @@ from stl import mesh
 class Object():
     def __init__(self):
         self.cam = Camera()
-        self.file = 'mario.stl'
+        self.file = 'mario.STL'
 
     def STL(self):
         self.your_mesh = mesh.Mesh.from_file(self.file)
